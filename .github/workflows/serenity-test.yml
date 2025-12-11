@@ -34,12 +34,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build and run Serenity tests
+      - name: Wait for Selenium to be ready
         run: |
-          mvn clean verify \
-            -Dwebdriver.driver=remote \
-            -Dwebdriver.remote.url=http://localhost:4444 \
-            -Dheadless=true
+          for i in {1..30}; do
+            curl -s http://localhost:4444/wd/hub/status | grep "ready" && break
+            echo "Waiting for Selenium..."
+            sleep 2
+          done
+
+      - name: Build and run tests
+        run: mvn clean verify
         working-directory: t2-serenity
 
       - name: Upload Serenity Reports
