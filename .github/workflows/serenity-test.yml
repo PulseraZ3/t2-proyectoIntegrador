@@ -36,9 +36,9 @@ jobs:
 
       - name: Build and run tests
         run: mvn clean verify
-
+        working-directory: t2-serenity
       - name: Upload Serenity Reports
         uses: actions/upload-artifact@v4
         with:
           name: serenity-reports
-          path: target/site/serenity
+          path: t2-serenity/target/site/serenity
